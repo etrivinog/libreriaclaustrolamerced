@@ -5,8 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import ListaLibros from './components/ListaLibros';
 
-const urlLibrosFindAll="http://localhost:8080/api/v1/books/findAll";
-const urlLibrosSave   ="http://localhost:8080/api/v1/books/save";
+const urlLibrosFindAll="https://hemerotecaudc.herokuapp.com/api/v1/books/findAll";
+const urlLibrosSave   ="https://hemerotecaudc.herokuapp.com/api/v1/books/save";
 
 class App extends Component {
 state={
