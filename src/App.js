@@ -5,8 +5,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import ListaLibros from './components/ListaLibros';
 
-const urlLibrosFindAll="https://hemerotecaudc.herokuapp.com/api/v1/books/findAll";
-const urlLibrosSave   ="https://hemerotecaudc.herokuapp.com/api/v1/books/save";
+const urlBase = "https://hemerotecaudc.herokuapp.com/";
+
+const urlLibros = "api/v1/books/";
+
+const urlLibrosFindAll = urlBase+urlLibros+"findAll";
+const urlLibrosSave    = urlBase+urlLibros+"save";
+const urlLibrosUpdate  = urlBase+urlLibros+"update";
+const urlLibrosDelete  = urlBase+urlLibros+"delete";
+
+const parametroLibroId = "?libroId=";
 
 class App extends Component {
 state={
@@ -14,7 +22,7 @@ state={
   modalInsertar: false,
   modalEliminar: false,
   form:{
-    id: '',
+    libroId: '',
     nombre: '',
     referencia: '',
     fechaIngreso: '',
@@ -45,14 +53,14 @@ peticionPost=async()=>{
 }
 
 peticionPut=()=>{
-  axios.put(urlLibrosFindAll+this.state.form.id, this.state.form).then(response=>{
+  axios.put(urlLibrosUpdate, this.state.form).then(response=>{
     this.modalInsertar();
     this.peticionGet();
   })
 }
 
 peticionDelete=()=>{
-  axios.delete(urlLibrosFindAll+this.state.form.id).then(response=>{
+  axios.delete(urlLibrosDelete+parametroLibroId+this.state.form.libroId).then(response=>{
     this.setState({modalEliminar: false});
     this.peticionGet();
   })
@@ -62,14 +70,22 @@ modalInsertar=()=>{
   this.setState({modalInsertar: !this.state.modalInsertar});
 }
 
-seleccionarEmpresa=(empresa)=>{
+setModalEliminar = (value) => {
+  this.setState({modalEliminar: value});
+}
+
+seleccionarEmpresa=(libro)=>{
   this.setState({
     tipoModal: 'actualizar',
-    form: {
-      id: empresa.id,
-      nombre: empresa.nombre,
-      pais: empresa.pais,
-      capital_bursatil: empresa.capital_bursatil
+    form:{
+      libroId: libro.libroId,
+      nombre: libro.nombre,
+      referencia: libro.referencia,
+      fechaIngreso: libro.fechaIngreso,
+      anio: libro.anio,
+      tipoRegistro: libro.tipoRegistro,
+      numRegistro: libro.numRegistro,
+      tipoDivulgacion: libro.tipoDivulgacion
     }
   })
 }
@@ -97,9 +113,12 @@ console.log(this.state.form);
     <br /><br /><br />
   <button className="btn btn-success" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Agregar Libro</button>
   <br /><br />
-    <ListaLibros state = {this.state} />
-
-
+  
+    <ListaLibros
+      state = {this.state}
+      seleccionarEmpresa = {this.seleccionarEmpresa}
+      modalInsertar = {this.modalInsertar}
+      setModalEliminar = {this.setModalEliminar} />
 
     <Modal isOpen={this.state.modalInsertar}>
                 <ModalHeader style={{display: 'block'}}>
@@ -107,29 +126,25 @@ console.log(this.state.form);
                 </ModalHeader>
                 <ModalBody>
                   <div className="form-group">
-                    <label htmlFor="id">ID</label>
-                    <input className="form-control" type="text" name="id" id="id" readOnly onChange={this.handleChange} value={form?form.id: this.state.data.length+1}/>
-                    <br />
+                    <input className="form-control" type="hidden" name="libroId" id="libroId" readOnly onChange={this.handleChange} value={form?form.libroId: ''}/>
+                    
                     <label htmlFor="nombre">Nombre</label>
                     <input className="form-control" type="text" name="nombre" id="nombre" onChange={this.handleChange} value={form?form.nombre: ''}/>
                     <br />
                     <label htmlFor="referencia">Referencia</label>
                     <input className="form-control" type="text" name="referencia" id="referencia" onChange={this.handleChange} value={form?form.referencia: ''}/>
                     <br />
-                    <label htmlFor="fechaIngreso">Fecha de ingreso</label>
-                    <input className="form-control" type="text" name="fechaIngreso" id="fechaIngreso" onChange={this.handleChange} value={form?form.fechaIngreso: ''}/>
-                    <br />
                     <label htmlFor="anio">Año de publicación</label>
-                    <input className="form-control" type="text" name="anio" id="anio" onChange={this.handleChange} value={form?form.anio: ''}/>
+                    <input className="form-control" type="number" name="anio" id="anio" onChange={this.handleChange} value={form?form.anio: ''}/>
                     <br />
                     <label htmlFor="tipoRegistro">Tipo de registro</label>
-                    <input className="form-control" type="number" name="tipoRegistro" id="tipoRegistro" onChange={this.handleChange} />
+                    <input className="form-control" type="number" name="tipoRegistro" id="tipoRegistro" onChange={this.handleChange} value={form?form.tipoRegistro: ''} />
                     <br />
                     <label htmlFor="numRegistro">Número de registro</label>
-                    <input className="form-control" type="text" name="numRegistro" id="numRegistro" onChange={this.handleChange}/>
+                    <input className="form-control" type="text" name="numRegistro" id="numRegistro" onChange={this.handleChange} value={form?form.numRegistro: ''}/>
                     <br />
                     <label htmlFor="tipoDivulgacion">Tipo de divulgación</label>
-                    <input className="form-control" type="number" name="tipoDivulgacion" id="tipoDivulgacion" onChange={this.handleChange} />
+                    <input className="form-control" type="number" name="tipoDivulgacion" id="tipoDivulgacion" onChange={this.handleChange} value={form?form.tipoDivulgacion: ''} />
                   </div>
                 </ModalBody>
 
@@ -148,7 +163,7 @@ console.log(this.state.form);
 
           <Modal isOpen={this.state.modalEliminar}>
             <ModalBody>
-               Estás seguro que deseas eliminar a la empresa {form && form.nombre}
+               Estás seguro que deseas eliminar el libro "{form && form.nombre}"
             </ModalBody>
             <ModalFooter>
               <button className="btn btn-danger" onClick={()=>this.peticionDelete()}>Sí</button>

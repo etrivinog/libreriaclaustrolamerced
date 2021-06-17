@@ -3,7 +3,7 @@ import React from'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-const ListaLibros = ({state}) => {
+const ListaLibros = ({state, seleccionarEmpresa, modalInsertar, setModalEliminar}) => {
     return (
         <table className="table ">
       <thead>
@@ -30,9 +30,9 @@ const ListaLibros = ({state}) => {
           <td>{libro.numRegistro}</td>
           <td>{libro.tipoDivulgacion}</td>
           <td>
-                <button className="btn btn-primary" onClick={()=>{this.seleccionarEmpresa(libro); this.modalInsertar()}}><FontAwesomeIcon icon={faEdit}/></button>
+                <button className="btn btn-primary" onClick={()=>{seleccionarEmpresa(libro); modalInsertar()}}><FontAwesomeIcon icon={faEdit}/></button>
                 {"   "}
-                <button className="btn btn-danger" onClick={()=>{this.seleccionarEmpresa(libro); this.setState({modalEliminar: true})}}><FontAwesomeIcon icon={faTrashAlt}/></button>
+                <button className="btn btn-danger" onClick={()=>{seleccionarEmpresa(libro); setModalEliminar(true)}}><FontAwesomeIcon icon={faTrashAlt}/></button>
                 </td>
           </tr>
           )
