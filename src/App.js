@@ -35,22 +35,13 @@ axios.get(urlLibrosFindAll).then(response=>{
 
 peticionPost=async()=>{
   console.log(JSON.stringify(this.state.form))
-  const requestOptions = {
-      method: 'POST',
-      headers: { 
-                  'Content-Type': 'application/json'
-                },
-      body: JSON.stringify(this.state.form)
-  };
-  const response = await fetch(urlLibrosSave, requestOptions);
-  const data = await response.json();
-      
- /*await axios.post(urlLibrosSave,this.state.form).then(response=>{
+  
+ await axios.post(urlLibrosSave,this.state.form).then(response=>{
     this.modalInsertar();
     this.peticionGet();
   }).catch(error=>{
     console.log(error.message);
-  })*/
+  })
 }
 
 peticionPut=()=>{
