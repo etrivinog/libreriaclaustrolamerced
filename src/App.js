@@ -8,11 +8,15 @@ import {
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import CrudLibros from './components/CrudLibros';
+import VistaLisbrosEstudiante from './components/VistaLisbrosEstudiante';
 import Home from './components/Home';
 
 class App extends Component {
+
+  state = {
+    curSession: null
+  }
 
   render(){
    
@@ -23,8 +27,12 @@ class App extends Component {
 
         <Switch>
 
-        <Route path="/managebooks">
+          <Route path="/managebooks">
             <CrudLibros/>
+          </Route>
+
+          <Route path="/student">
+            <VistaLisbrosEstudiante/>
           </Route>
 
           <Route path="/">

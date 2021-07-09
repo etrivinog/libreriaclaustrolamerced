@@ -1,20 +1,28 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 
+import '../App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Home = () => {
     return (
-        <div class="container">
-            <div class="row align-items-center">
+        <div id="main container" class="container-fluid">
+            
+            <div class="row top"></div>
+            
+            <div class="row">
+                
                 <div class="col">
-                    <Link to="/managebooks">Gestionar libros</Link>
+                    <Link to="student">Ingreso estudiantes</Link>
+                    <br />
+                    <Link to="LoginAdmin">Ingreso administrador</Link>
                 </div>
-                <div class="col">
-                    <Link to="/managebooks">Gestionar usuarios</Link>
-                </div>
+                
             </div>
-        </div>
+            
+            <div class="row botton"></div>
+            
+            </div>
     )
 }
 
