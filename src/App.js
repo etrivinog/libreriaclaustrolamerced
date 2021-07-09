@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import CrudLibros from './components/CrudLibros';
-
-//const urlBase = "https://hemerotecaudc.herokuapp.com/";
-const urlBase = "http://localhost:8080/";
-
-const urlLibros = "api/v1/books/";
-
-const urlLibrosFindAll = urlBase+urlLibros+"findAll";
-const urlLibrosSave    = urlBase+urlLibros+"save";
-const urlLibrosUpdate  = urlBase+urlLibros+"update";
-const urlLibrosDelete  = urlBase+urlLibros+"delete";
-
-const parametroLibroId = "?libroId=";
+import Home from './components/Home';
 
 class App extends Component {
 
@@ -23,8 +19,22 @@ class App extends Component {
   return (
     <div className="App">
 
-      <CrudLibros/>
-      
+      <Router>
+
+        <Switch>
+
+        <Route path="/managebooks">
+            <CrudLibros/>
+          </Route>
+
+          <Route path="/">
+            <Home/>
+          </Route>
+
+        </Switch>
+
+      </Router>
+
     </div>
 
 
