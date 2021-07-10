@@ -6,8 +6,8 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import {Link} from "react-router-dom";
 import ListaLibrosEstudiante from './ListaLibrosEstudiante';
 
-//const urlBase = "https://hemerotecaudc.herokuapp.com/";
-const urlBase = "http://localhost:8080/";
+const urlBase = "https://hemerotecaudc.herokuapp.com/";
+//const urlBase = "http://localhost:8080/";
 
 const urlLibros = "api/v1/books/";
 
