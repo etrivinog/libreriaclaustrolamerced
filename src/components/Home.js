@@ -15,7 +15,7 @@ const Home = () => {
                 <div class="col">
                     <Link to="student">Ingreso estudiantes</Link>
                     <br />
-                    <Link to="managebook">Ingreso administrador</Link>
+                    <Link to="managebooks">Ingreso administrador</Link>
                 </div>
                 
             </div>
