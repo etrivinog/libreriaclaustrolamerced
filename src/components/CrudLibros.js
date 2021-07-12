@@ -45,6 +45,10 @@ axios.get(urlLibrosFindAll).then(response=>{
 
 peticionPost=async()=>{
   console.log(JSON.stringify(this.state.form))
+
+  if(this.state.form.tipoRegistro == null || this.state.form.tipoDivulgacion == null){
+    return;
+  }
   
  await axios.post(urlLibrosSave,this.state.form).then(response=>{
     this.modalInsertar();
@@ -143,13 +147,32 @@ console.log(this.state.form);
                     <input className="form-control" type="number" name="anio" id="anio" onChange={this.handleChange} value={form?form.anio: ''}/>
                     <br />
                     <label htmlFor="tipoRegistro">Tipo de registro</label>
-                    <input className="form-control" type="number" name="tipoRegistro" id="tipoRegistro" onChange={this.handleChange} value={form?form.tipoRegistro: ''} />
+                    <br />
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro1"  onChange={this.handleChange} value="1" checked={form&&form.tipoRegistro==1?true:false} required/>
+                      <label class="form-check-label" for="tipoRegistro1">ISBN</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro2"  onChange={this.handleChange} value="2" checked={form&&form.tipoRegistro==2?true:false}/>
+                      <label class="form-check-label" for="tipoRegistro2">ISSN</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro3"  onChange={this.handleChange} value="3" checked={form&&form.tipoRegistro==3?true:false}/>
+                      <label class="form-check-label" for="tipoRegistro3">OTRO</label>
+                    </div>
+                    <br />
                     <br />
                     <label htmlFor="numRegistro">Número de registro</label>
                     <input className="form-control" type="text" name="numRegistro" id="numRegistro" onChange={this.handleChange} value={form?form.numRegistro: ''}/>
                     <br />
-                    <label htmlFor="tipoDivulgacion">Tipo de divulgación</label>
-                    <input className="form-control" type="number" name="tipoDivulgacion" id="tipoDivulgacion" onChange={this.handleChange} value={form?form.tipoDivulgacion: ''} />
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="tipoDivulgacion" id="tipoDivulgacion1"  onChange={this.handleChange} value="1" checked={form&&form.tipoDivulgacion==1?true:false} required/>
+                      <label class="form-check-label" for="tipoDivulgacion1">PAPEL</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="tipoDivulgacion" id="tipoDivulgacion2"  onChange={this.handleChange} value="2" checked={form&&form.tipoDivulgacion==2?true:false}/>
+                      <label class="form-check-label" for="tipoDivulgacion2">CD</label>
+                    </div>
                   </div>
                 </ModalBody>
 

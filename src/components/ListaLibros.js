@@ -26,9 +26,9 @@ const ListaLibros = ({state, seleccionarEmpresa, modalInsertar, setModalEliminar
           <td>{libro.referencia}</td>
           <td>{libro.fechaIngreso}</td>
           <td>{libro.anio}</td>
-          <td>{libro.tipoRegistro}</td>
+          <td>{libro.tipoRegistro==1?"ISBN":libro.tipoRegistro==2?"ISSN":"OTRO"}</td>
           <td>{libro.numRegistro}</td>
-          <td>{libro.tipoDivulgacion}</td>
+          <td>{libro.tipoDivulgacion==1?"PAPEL":libro.tipoDivulgacion==2?"CD":""}</td>
           <td>
                 <button className="btn btn-primary" onClick={()=>{seleccionarEmpresa(libro); modalInsertar()}}><FontAwesomeIcon icon={faEdit}/></button>
                 {"   "}
