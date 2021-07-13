@@ -6,10 +6,9 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import {Link} from "react-router-dom";
 import ListaLibrosEstudiante from './ListaLibrosEstudiante';
 
-const urlBase = "https://hemerotecaudc.herokuapp.com/";
-//const urlBase = "http://localhost:8080/";
+import  {urlBase, urlAPIversion} from "../constants/urls"
 
-const urlLibros = "api/v1/books/";
+const urlLibros = urlAPIversion+"books/";
 
 const urlLibrosFindAll = urlBase+urlLibros+"findAll";
 const urlLibrosSave    = urlBase+urlLibros+"save";
@@ -114,7 +113,7 @@ console.log(this.state.form);
     <div className="App">
     <br /><br /><br />
   
-  <Link class="btn btn-danger" to="/">Ir a inicio</Link>
+  <Link class="btn btn-danger" to="/">Salir</Link>
   &nbsp;
   <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Solicitar pr&eacute;stamo</button>
   <br /><br />

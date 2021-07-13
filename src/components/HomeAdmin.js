@@ -13,16 +13,18 @@ const Home = () => {
             <div class="row">
                 
                 <div class="col">
-                    <Link to="StudentSite">Ingreso estudiantes</Link>
+                    <Link to="ManageStudents">Gestionar estudiantes</Link>
                     <br />
-                    <Link to="AdminHome">Ingreso administrador</Link>
+                    <Link to="ManageBooks">Gestionar libros</Link>
+                    <br />
+                    <Link to="/">Salir</Link>
                 </div>
                 
             </div>
             
             <div class="row botton"></div>
-            
-            </div>
+
+        </div>
     )
 }
 

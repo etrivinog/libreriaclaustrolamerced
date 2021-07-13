@@ -1,7 +1,7 @@
 import React from'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faEdit, faHandPointUp, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const ListaLibros = ({state, seleccionarEmpresa, modalInsertar, setModalEliminar}) => {
     return (
@@ -30,7 +30,7 @@ const ListaLibros = ({state, seleccionarEmpresa, modalInsertar, setModalEliminar
           <td>{libro.numRegistro}</td>
           <td>{libro.tipoDivulgacion}</td>
           <td>
-                <button tooltip="Seleccionar para pr&eacute;stamo" className="btn btn-primary" onClick={()=>{seleccionarEmpresa(libro); modalInsertar()}}><FontAwesomeIcon icon={faCheckSquare}/></button>
+                <button tooltip="Seleccionar para pr&eacute;stamo" className="btn btn-primary" onClick={()=>{seleccionarEmpresa(libro); modalInsertar()}}><FontAwesomeIcon icon={faHandPointUp}/></button>
           </td>
           </tr>
           )
