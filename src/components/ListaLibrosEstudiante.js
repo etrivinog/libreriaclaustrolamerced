@@ -10,7 +10,7 @@ const ListaLibros = ({state, seleccionarEmpresa, modalInsertar, setModalEliminar
         <tr>
           <th>Nombre</th>
           <th>Referencia</th>
-          <th>Fecha de ingreso</th>
+          <th>Disponibles</th>
           <th>Año de publicación</th>
           <th>Tipo de registro</th>
           <th>Número de registro</th>
@@ -24,13 +24,13 @@ const ListaLibros = ({state, seleccionarEmpresa, modalInsertar, setModalEliminar
             <tr>
           <td>{libro.nombre}</td>
           <td>{libro.referencia}</td>
-          <td>{libro.fechaIngreso}</td>
+          <td>{libro.disponibles}</td>
           <td>{libro.anio}</td>
-          <td>{libro.tipoRegistro}</td>
+          <td>{libro.tipoRegistro==1?"ISBN":libro.tipoRegistro==2?"ISSN":"OTRO"}</td>
           <td>{libro.numRegistro}</td>
-          <td>{libro.tipoDivulgacion}</td>
+          <td>{libro.tipoDivulgacion==1?"PAPEL":libro.tipoDivulgacion==2?"CD":""}</td>
           <td>
-                <button tooltip="Seleccionar para pr&eacute;stamo" className="btn btn-primary" onClick={()=>{seleccionarEmpresa(libro); modalInsertar()}}><FontAwesomeIcon icon={faHandPointUp}/></button>
+                <button tooltip="Seleccionar para pr&eacute;stamo" className="btn btn-primary" onClick={()=>{seleccionarEmpresa(libro); modalInsertar()}}>Prestar</button>
           </td>
           </tr>
           )

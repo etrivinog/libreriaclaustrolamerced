@@ -9,9 +9,10 @@ import ListaLibrosEstudiante from './ListaLibrosEstudiante';
 import  {urlBase, urlAPIversion} from "../constants/urls"
 
 const urlLibros = urlAPIversion+"books/";
+const urlPrestamos = urlAPIversion+"lends/";
 
 const urlLibrosFindAll = urlBase+urlLibros+"findAll";
-const urlLibrosSave    = urlBase+urlLibros+"save";
+const urlPrestamosSave    = urlBase+urlPrestamos+"save";
 const urlLibrosUpdate  = urlBase+urlLibros+"update";
 const urlLibrosDelete  = urlBase+urlLibros+"delete";
 
@@ -23,14 +24,8 @@ state={
   modalInsertar: false,
   modalEliminar: false,
   form:{
-    libroId: '',
-    nombre: '',
-    referencia: '',
-    fechaIngreso: '',
-    anio: '',
-    tipoRegistro: 1,
-    numRegistro: '',
-    tipoDivulgacion: 1
+    idEjemplar: '',
+    codEstudiante: ''
   }
 }
 
@@ -45,7 +40,7 @@ axios.get(urlLibrosFindAll).then(response=>{
 peticionPost=async()=>{
   console.log(JSON.stringify(this.state.form))
   
- await axios.post(urlLibrosSave,this.state.form).then(response=>{
+ await axios.post(urlPrestamosSave,this.state.form).then(response=>{
     this.modalInsertar();
     this.peticionGet();
   }).catch(error=>{
@@ -79,14 +74,7 @@ seleccionarEmpresa=(libro)=>{
   this.setState({
     tipoModal: 'actualizar',
     form:{
-      libroId: libro.libroId,
-      nombre: libro.nombre,
-      referencia: libro.referencia,
-      fechaIngreso: libro.fechaIngreso,
-      anio: libro.anio,
-      tipoRegistro: libro.tipoRegistro,
-      numRegistro: libro.numRegistro,
-      tipoDivulgacion: libro.tipoDivulgacion
+      idEjemplar: libro.libroId
     }
   })
 }
@@ -115,7 +103,7 @@ console.log(this.state.form);
   
   <Link class="btn btn-danger" to="/">Salir</Link>
   &nbsp;
-  <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Solicitar pr&eacute;stamo</button>
+  <Link className="btn btn-primary" to="#" onClick={()=>{}}>Ver mis pr&eacute;stamos</Link>
   <br /><br />
   
     <ListaLibrosEstudiante
@@ -129,16 +117,20 @@ console.log(this.state.form);
                   <span style={{float: 'right'}} onClick={()=>this.modalInsertar()}>x</span>
                 </ModalHeader>
                 <ModalBody>
+                <div className="form-group">
+                    <input className="form-control" type="hidden" name="idEstudiante" id="idEstudiante" readOnly onChange={this.handleChange} value={form?form.idEstudiante: ''}/>
+                    
+                    <label htmlFor="codEstudiante">C&oacute;digo de estudiante</label>
+                    <input className="form-control" type="text" name="codEstudiante" id="codEstudiante" onChange={this.handleChange} value={form?form.cod: ''}/>
+                    <br />
+                  </div>
                 </ModalBody>
 
                 <ModalFooter>
-                  {this.state.tipoModal=='insertar'?
-                    <button className="btn btn-success" onClick={()=>this.peticionPost()}>
-                    Insertar
-                  </button>: <button className="btn btn-primary" onClick={()=>this.peticionPut()}>
-                    Actualizar
+                  <button className="btn btn-primary" onClick={()=>this.peticionPost()}>
+                    Solicitar pr&eacute;stamo
                   </button>
-  }
+  
                     <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
                 </ModalFooter>
           </Modal>

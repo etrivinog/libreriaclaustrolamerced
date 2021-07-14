@@ -13,7 +13,7 @@ const Home = () => {
             <div class="row">
                 
                 <div class="col">
-                    <Link to="StudentSite">Ingreso estudiantes</Link>
+                    <Link to="StudentPortal">Ingreso estudiantes</Link>
                     <br />
                     <Link to="AdminHome">Ingreso administrador</Link>
                 </div>
