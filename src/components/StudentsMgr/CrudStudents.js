@@ -15,7 +15,7 @@ const urlSave    = urlBase+urlStudents+"save";
 const urlUpdate  = urlBase+urlStudents+"update";
 const urlDelete  = urlBase+urlStudents+"delete";
 
-const parameterId = "?Id=";
+const parameterId = "?idEstudiante=";
 
 class App extends Component {
 state={
