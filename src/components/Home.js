@@ -8,15 +8,21 @@ const Home = () => {
     return (
         <div id="main container" className="container-fluid">
             
-            <div className="row top"></div>
+            <div className="row top"><br /></div>
             
             <div className="row">
                 
+                <div className="col"></div>
+                <div className="col"></div>
                 <div className="col">
-                    <Link to="StudentPortal">Ingreso estudiantes</Link>
-                    <br />
-                    <Link to="AdminHome">Ingreso administrador</Link>
+                    <Link to="StudentPortal"><button className="btn btn-primary option">Estudiante</button></Link>
                 </div>
+                <div className="col"></div>
+                <div className="col">
+                    <Link to="AdminHome"><button className="btn btn-primary option">Administrador</button></Link>
+                </div>
+                <div className="col"></div>
+                <div className="col"></div>
                 
             </div>
             
