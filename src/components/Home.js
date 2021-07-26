@@ -6,13 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Home = () => {
     return (
-        <div id="main container" class="container-fluid">
+        <div id="main container" className="container-fluid">
             
-            <div class="row top"></div>
+            <div className="row top"></div>
             
-            <div class="row">
+            <div className="row">
                 
-                <div class="col">
+                <div className="col">
                     <Link to="StudentPortal">Ingreso estudiantes</Link>
                     <br />
                     <Link to="AdminHome">Ingreso administrador</Link>
@@ -20,7 +20,7 @@ const Home = () => {
                 
             </div>
             
-            <div class="row botton"></div>
+            <div className="row botton"></div>
             
             </div>
     )

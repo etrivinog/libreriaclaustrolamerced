@@ -10,8 +10,10 @@ import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import CrudLibros from './components/CrudLibros';
 import CrudStudents from './components/StudentsMgr/CrudStudents';
+import CrudLends from './components/lends/CrudLends';
 import VistaLisbrosEstudiante from './components/VistaLisbrosEstudiante';
 import Home from './components/Home';
+import ValidateAdminLogin from './components/ValidateAdminLogin';
 
 import axios from "axios";
 
@@ -23,7 +25,7 @@ import  {urlBase, urlAPIversion} from "./constants/urls";
 class App extends Component {
 
   state = {
-    curSession: null
+    adminSession: null,
   }
   
 
@@ -40,26 +42,41 @@ class App extends Component {
     this.firstget();
   }
 
+  getSession = () => {
+    return this.state.adminSession;
+  }
+  
+  setAdminSession = (session) =>{
+    this.setState({adminSession: session});
+    console.log('this.state.curSession: '+this.state.adminSession);
+  }
+  
   render(){
    
   return (
     <div className="App">
 
       <Router>
+      
+        <ValidateAdminLogin getSession={this.getSession}/>
 
         <Switch>
 
           /******************** Portal del admin ********************/
           <Route path="/ManageBooks">
-            <CrudLibros/>
+            <CrudLibros getSession={this.getSession}/>
           </Route>
 
           <Route path="/ManageStudents">
-            <CrudStudents/>
+            <CrudStudents getSession={this.getSession}/>
+          </Route>
+
+          <Route path="/ManageLends">
+            <CrudLends getSession={this.getSession}/>
           </Route>
 
           <Route path="/AdminHome">
-            <HomeAdmin/>
+            <HomeAdmin getSession={this.getSession} setSession={this.setAdminSession}/>
           </Route>
 
           /******************** Portal del estudiante ***********************/

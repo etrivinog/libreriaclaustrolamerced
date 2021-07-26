@@ -3,7 +3,7 @@ import '../App.css';
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import ListaLibros from './ListaLibros';
 
 import  {urlBase, urlAPIversion} from "../constants/urls"
@@ -109,99 +109,100 @@ console.log(this.state.form);
   componentDidMount() {
     this.peticionGet();
   }
-  
 
   render(){
     const {form}=this.state;
-  return (
-    <div className="App">
-    <br /><br /><br />
-  
-  <Link class="btn btn-danger" to="/AdminHome">Volver</Link>
-  &nbsp;
-  <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Agregar Libro</button>
-  <br /><br />
-  
-    <ListaLibros
-      state = {this.state}
-      seleccionarEmpresa = {this.seleccionarEmpresa}
-      modalInsertar = {this.modalInsertar}
-      setModalEliminar = {this.setModalEliminar} />
 
-    <Modal isOpen={this.state.modalInsertar}>
-                <ModalHeader style={{display: 'block'}}>
-                  <span style={{float: 'right'}} onClick={()=>this.modalInsertar()}>x</span>
-                </ModalHeader>
+    return (
+      <div className="App">
+      <br /><br /><br />
+    
+      <Link className="btn btn-danger" to="/AdminHome">Volver</Link>
+      &nbsp;
+      <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Agregar Libro</button>
+      <br /><br />
+      
+        <ListaLibros
+          state = {this.state}
+          seleccionarEmpresa = {this.seleccionarEmpresa}
+          modalInsertar = {this.modalInsertar}
+          setModalEliminar = {this.setModalEliminar} />
+
+        <Modal isOpen={this.state.modalInsertar}>
+                    <ModalHeader style={{display: 'block'}}>
+                      <span style={{float: 'right'}} onClick={()=>this.modalInsertar()}>x</span>
+                    </ModalHeader>
+                    <ModalBody>
+                      <div className="form-group">
+                        <input className="form-control" type="hidden" name="libroId" id="libroId" readOnly onChange={this.handleChange} value={form?form.libroId: ''}/>
+                        
+                        <label htmlFor="nombre">Nombre</label>
+                        <input className="form-control" type="text" name="nombre" id="nombre" onChange={this.handleChange} value={form?form.nombre: ''}/>
+                        <br />
+                        <label htmlFor="referencia">Referencia</label>
+                        <input className="form-control" type="text" name="referencia" id="referencia" onChange={this.handleChange} value={form?form.referencia: ''}/>
+                        <br />
+                        <label htmlFor="anio">Año de publicación</label>
+                        <input className="form-control" type="number" name="anio" id="anio" onChange={this.handleChange} value={form?form.anio: ''}/>
+                        <br />
+                        <label htmlFor="tipoRegistro">Tipo de registro</label>
+                        <br />
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro1"  onChange={this.handleChange} value="1" checked={form&&form.tipoRegistro==1?true:false} required/>
+                          <label className="form-check-label" for="tipoRegistro1">ISBN</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro2"  onChange={this.handleChange} value="2" checked={form&&form.tipoRegistro==2?true:false}/>
+                          <label className="form-check-label" for="tipoRegistro2">ISSN</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro3"  onChange={this.handleChange} value="3" checked={form&&form.tipoRegistro==3?true:false}/>
+                          <label className="form-check-label" for="tipoRegistro3">OTRO</label>
+                        </div>
+                        <br />
+                        <br />
+                        <label htmlFor="numRegistro">Número de registro</label>
+                        <input className="form-control" type="text" name="numRegistro" id="numRegistro" onChange={this.handleChange} value={form?form.numRegistro: ''}/>
+                        <br />
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="tipoDivulgacion" id="tipoDivulgacion1"  onChange={this.handleChange} value="1" checked={form&&form.tipoDivulgacion==1?true:false} required/>
+                          <label className="form-check-label" for="tipoDivulgacion1">PAPEL</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="tipoDivulgacion" id="tipoDivulgacion2"  onChange={this.handleChange} value="2" checked={form&&form.tipoDivulgacion==2?true:false}/>
+                          <label className="form-check-label" for="tipoDivulgacion2">CD</label>
+                        </div>
+                      </div>
+                    </ModalBody>
+
+                    <ModalFooter>
+                      {this.state.tipoModal=='insertar'?
+                        <button className="btn btn-success" onClick={()=>this.peticionPost()}>
+                        Insertar
+                      </button>: <button className="btn btn-primary" onClick={()=>this.peticionPut()}>
+                        Actualizar
+                      </button>
+      }
+                        <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
+                    </ModalFooter>
+              </Modal>
+
+
+              <Modal isOpen={this.state.modalEliminar}>
                 <ModalBody>
-                  <div className="form-group">
-                    <input className="form-control" type="hidden" name="libroId" id="libroId" readOnly onChange={this.handleChange} value={form?form.libroId: ''}/>
-                    
-                    <label htmlFor="nombre">Nombre</label>
-                    <input className="form-control" type="text" name="nombre" id="nombre" onChange={this.handleChange} value={form?form.nombre: ''}/>
-                    <br />
-                    <label htmlFor="referencia">Referencia</label>
-                    <input className="form-control" type="text" name="referencia" id="referencia" onChange={this.handleChange} value={form?form.referencia: ''}/>
-                    <br />
-                    <label htmlFor="anio">Año de publicación</label>
-                    <input className="form-control" type="number" name="anio" id="anio" onChange={this.handleChange} value={form?form.anio: ''}/>
-                    <br />
-                    <label htmlFor="tipoRegistro">Tipo de registro</label>
-                    <br />
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro1"  onChange={this.handleChange} value="1" checked={form&&form.tipoRegistro==1?true:false} required/>
-                      <label class="form-check-label" for="tipoRegistro1">ISBN</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro2"  onChange={this.handleChange} value="2" checked={form&&form.tipoRegistro==2?true:false}/>
-                      <label class="form-check-label" for="tipoRegistro2">ISSN</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="tipoRegistro" id="tipoRegistro3"  onChange={this.handleChange} value="3" checked={form&&form.tipoRegistro==3?true:false}/>
-                      <label class="form-check-label" for="tipoRegistro3">OTRO</label>
-                    </div>
-                    <br />
-                    <br />
-                    <label htmlFor="numRegistro">Número de registro</label>
-                    <input className="form-control" type="text" name="numRegistro" id="numRegistro" onChange={this.handleChange} value={form?form.numRegistro: ''}/>
-                    <br />
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="tipoDivulgacion" id="tipoDivulgacion1"  onChange={this.handleChange} value="1" checked={form&&form.tipoDivulgacion==1?true:false} required/>
-                      <label class="form-check-label" for="tipoDivulgacion1">PAPEL</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="tipoDivulgacion" id="tipoDivulgacion2"  onChange={this.handleChange} value="2" checked={form&&form.tipoDivulgacion==2?true:false}/>
-                      <label class="form-check-label" for="tipoDivulgacion2">CD</label>
-                    </div>
-                  </div>
+                  Estás seguro que deseas eliminar el libro "{form && form.nombre}"
                 </ModalBody>
-
                 <ModalFooter>
-                  {this.state.tipoModal=='insertar'?
-                    <button className="btn btn-success" onClick={()=>this.peticionPost()}>
-                    Insertar
-                  </button>: <button className="btn btn-primary" onClick={()=>this.peticionPut()}>
-                    Actualizar
-                  </button>
-  }
-                    <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
+                  <button className="btn btn-danger" onClick={()=>this.peticionDelete()}>Sí</button>
+                  <button className="btn btn-secundary" onClick={()=>this.setState({modalEliminar: false})}>No</button>
                 </ModalFooter>
-          </Modal>
-
-
-          <Modal isOpen={this.state.modalEliminar}>
-            <ModalBody>
-               Estás seguro que deseas eliminar el libro "{form && form.nombre}"
-            </ModalBody>
-            <ModalFooter>
-              <button className="btn btn-danger" onClick={()=>this.peticionDelete()}>Sí</button>
-              <button className="btn btn-secundary" onClick={()=>this.setState({modalEliminar: false})}>No</button>
-            </ModalFooter>
-          </Modal>
-  </div>
+              </Modal>
+      </div>
 
 
 
-  );
-}
+    );
+  }
+
 }
 export default App;

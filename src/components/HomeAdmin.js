@@ -4,25 +4,33 @@ import {Link} from "react-router-dom";
 import '../App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const Home = () => {
+import AdminLogin from './AdminLogin';
+
+const Home = ({getSession, setSession}) => {
+    
+    if (getSession() == null) {
+        return <AdminLogin setSession={setSession}/>
+    }
     return (
-        <div id="main container" class="container-fluid">
+        <div id="main container" className="container-fluid">
             
-            <div class="row top"></div>
+            <div className="row top"></div>
             
-            <div class="row">
+            <div className="row">
                 
-                <div class="col">
+                <div className="col">
                     <Link to="ManageStudents">Gestionar estudiantes</Link>
                     <br />
                     <Link to="ManageBooks">Gestionar libros</Link>
                     <br />
-                    <Link to="/">Salir</Link>
+                    <Link to="ManageLends">Gestionar pr&eacute;stamos</Link>
+                    <br />
+                    <Link onClick={() => {setSession(null)}} to="/">Salir</Link>
                 </div>
                 
             </div>
             
-            <div class="row botton"></div>
+            <div className="row botton"></div>
 
         </div>
     )

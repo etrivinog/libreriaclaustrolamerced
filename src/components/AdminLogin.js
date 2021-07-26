@@ -5,12 +5,9 @@ import  {urlBase, urlAPIversion} from "../constants/urls"
 
 import '../Login.css';
 
-const urlStudents = urlAPIversion+"students/";
+const urlAuth = urlAPIversion+"auth/";
 
-const urlFindAll = urlBase+urlStudents+"findAll";
-const urlSave    = urlBase+urlStudents+"save";
-const urlUpdate  = urlBase+urlStudents+"update";
-const urlDelete  = urlBase+urlStudents+"delete";
+const urlSave    = urlBase+urlAuth+"login/";
 
 const parameterId = "?Id=";
 
@@ -25,64 +22,28 @@ state={
   }
 }
 
-peticionGet=()=>{
-axios.get(urlFindAll).then(response=>{
-  this.setState({data: response.data});
-}).catch(error=>{
-  console.log(error.message);
-})
-}
+loginGet=()=>{
 
-peticionPost=async()=>{
-  console.log(JSON.stringify(this.state.form))
-
-  if(this.state.form.identificacion == null || this.state.form.idtipoidentificacion == null
-    || this.state.form.codigo_estudiantil == null ){
+  if(this.state.form.user == null || this.state.form.pass == null){
     return;
   }
   
- await axios.post(urlSave,this.state.form).then(response=>{
-    this.modalInsertar();
-    this.peticionGet();
+  axios.get(urlSave+'?user='+this.state.form.user+'&pass='+this.state.form.pass,).then(response=>{
+    console.log(response.data);
+    if(response.data == 'OK'){
+      this.props.setSession(response.data);
+    }
   }).catch(error=>{
     console.log(error.message);
   })
 }
 
-peticionPut=()=>{
-  axios.put(urlUpdate, this.state.form).then(response=>{
-    this.modalInsertar();
-    this.peticionGet();
-  })
-}
-
-peticionDelete=()=>{
-  axios.delete(urlDelete+parameterId+this.state.form.idEstudiante).then(response=>{
-    this.setState({modalEliminar: false});
-    this.peticionGet();
-  })
-}
-
-modalInsertar=()=>{
-  this.setState({modalInsertar: !this.state.modalInsertar});
-}
-
-setModalEliminar = (value) => {
-  this.setState({modalEliminar: value});
-}
-
-seleccionarEmpresa=(estudiante)=>{
+seleccionarEmpresa=(admin)=>{
   this.setState({
     tipoModal: 'actualizar',
     form:{
-      idEstudiante: estudiante.idEstudiante,
-      nombres: estudiante.nombres,
-      apellidos: estudiante.apellidos,
-      email: estudiante.email,
-      telefono: estudiante.telefono,
-      codigo_estudiantil: estudiante.codigo_estudiantil,
-      identificacion: estudiante.identificacion,
-      idtipoidentificacion: estudiante.idtipoidentificacion
+      user: '',
+      pass: ''
     }
   })
 }
@@ -95,7 +56,6 @@ await this.setState({
     [e.target.name]: e.target.value
   }
 });
-console.log(this.state.form);
 }
 
 
@@ -105,21 +65,21 @@ console.log(this.state.form);
     <div className="App">
     <br /><br /><br />
   
-  <Link class="btn btn-danger" to="/">Volver</Link>
+  <Link className="btn btn-danger" to="/">Volver</Link>
   <br /><br />
   
-          <div class="wrapper fadeInDown">
+          <div className="wrapper fadeInDown">
             <div id="formContent">
                 <h2 className="active"> Iniciar sesi&oacute;n </h2>
 
                 <form>
-                <input type="text" id="user" class="fadeIn second" onChange={this.handleChange} name="user" placeholder="Correo electr&oacute;nico" />
-                <input type="text" id="pass" class="fadeIn third" onChange={this.handleChange} name="pass" placeholder="Contrase&ntilde;a" />
-                <input type="button" onClick={()=>this.peticionPost()} class="fadeIn fourth" value="Iniciar sesi&oacute;n" />
+                <input type="text" id="user" className="fadeIn second" onChange={this.handleChange} name="user" placeholder="Correo electr&oacute;nico" />
+                <input type="text" id="pass" className="fadeIn third" onChange={this.handleChange} name="pass" placeholder="Contrase&ntilde;a" />
+                <input type="button" onClick={()=>this.loginGet()} className="fadeIn fourth" value="Iniciar sesi&oacute;n" />
                 </form>
 
                 <div id="formFooter">
-                <a class="underlineHover" href="#">Forgot Password?</a>
+                <a className="underlineHover" href="#">Forgot Password?</a>
                 </div>
 
             </div>
