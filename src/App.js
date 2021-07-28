@@ -19,6 +19,7 @@ import axios from "axios";
 
 import HomeAdmin from './components/HomeAdmin';
 import StudentLogin from './components/StudentLogin';
+import ModalRequest from './components/ModalRequest';
 
 import  {urlBase, urlAPIversion} from "./constants/urls";
 
@@ -26,15 +27,36 @@ class App extends Component {
 
   state = {
     adminSession: null,
+    ModalRequest: {
+      isOpen: false,
+      message: '',
+      showButton: false
+    }
   }
   
 
+
+  changeModal = (isOpen, msg, showButton) => {
+  
+    this.setState({ ModalRequest: {isOpen: isOpen, message: msg, showButton: showButton} });
+  
+  }
+
   //Hace la primera petición al servidor para comprobar la disponibilidad de las APISs
   firstget=async()=>{
+
+    this.changeModal(true, 'Iniciando aplicación...', false);
+
     axios.get(urlBase+urlAPIversion+"verifyServer").then(response=>{
       this.setState({data: response.data});
+      
+      this.changeModal(false, 'Aplicación inicializada.', false);
+
     }).catch(error=>{
       console.log(error.message);
+      
+      this.changeModal(true, error.message, false);
+      
     })
     }
 
@@ -57,7 +79,11 @@ class App extends Component {
     <div className="App">
 
       <Router>
-      
+        
+        <ModalRequest isOpen={this.state.ModalRequest.isOpen}
+                      message={this.state.ModalRequest.message} 
+                      showButton={this.state.ModalRequest.showButton} />
+
         <ValidateAdminLogin getSession={this.getSession}/>
 
         <Switch>

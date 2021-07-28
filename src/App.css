@@ -1,4 +1,8 @@
 
+.loginMessage {
+  color: red;
+}
+
 .App {
   text-align: center;
 }

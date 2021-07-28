@@ -5,6 +5,7 @@ import '../App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Home = () => {
+    
     return (
         <div id="main container" className="container-fluid">
             
@@ -27,7 +28,7 @@ const Home = () => {
             </div>
             
             <div className="row botton"></div>
-            
+
             </div>
     )
 }

@@ -22,6 +22,7 @@ state={
   data:[],
   modalInsertar: false,
   modalEliminar: false,
+  message: '',
   form:{
     idEstudiante: '',
     nombres: '',
@@ -35,11 +36,18 @@ state={
 }
 
 peticionGet=()=>{
-axios.get(urlFindAll).then(response=>{
-  this.setState({data: response.data});
-}).catch(error=>{
-  console.log(error.message);
-})
+  
+  this.setState({message: 'Cargando estudiantes...'});
+
+  axios.get(urlFindAll).then(response=>{
+
+    this.setState({data: response.data});
+    this.setState({message: ''});
+
+  }).catch(error=>{
+    console.log(error.message);
+    this.setState({message: error.message});
+  })
 }
 
 peticionPost=async()=>{
@@ -127,7 +135,8 @@ console.log(this.state.form);
       state = {this.state}
       seleccionarEmpresa = {this.seleccionarEmpresa}
       modalInsertar = {this.modalInsertar}
-      setModalEliminar = {this.setModalEliminar} />
+      setModalEliminar = {this.setModalEliminar}
+      message = {this.state.message} />
 
     <Modal isOpen={this.state.modalInsertar}>
                 <ModalHeader style={{display: 'block'}}>

@@ -24,6 +24,7 @@ state={
   modalInsertar: false,
   modalEliminar: false,
   modalFinalizar: false,
+  message: '',
   form:{
     idprestamos: '',
     fechaInicio: '',
@@ -35,11 +36,18 @@ state={
 }
 
 peticionGet=()=>{
-axios.get(urlFindAll).then(response=>{
-  this.setState({data: response.data});
-}).catch(error=>{
-  console.log(error.message);
-})
+
+  this.setState({message: 'Cargando préstamos...'});
+
+  axios.get(urlFindAll).then(response=>{
+
+    this.setState({data: response.data});
+    this.setState({message: ''});
+    
+  }).catch(error=>{
+    console.log(error.message);
+    this.setState({message: error.message});
+  })
 }
 
 peticionPost=async()=>{
@@ -135,7 +143,8 @@ console.log(this.state.form);
       seleccionarEmpresa = {this.seleccionarEmpresa}
       modalInsertar = {this.modalInsertar}
       setModalEliminar = {this.setModalEliminar} 
-      setModalFinalizar = {this.setModalFinalizar} />
+      setModalFinalizar = {this.setModalFinalizar}
+      message = {this.state.message} />
 
     <Modal isOpen={this.state.modalInsertar}>
                 <ModalHeader style={{display: 'block'}}>
