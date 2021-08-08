@@ -98,8 +98,8 @@ await this.setState({
                 <h2 className="active"> Iniciar sesi&oacute;n </h2>
 
                 <form>
-                <input type="text" id="user" className="fadeIn second" onChange={this.handleChange} name="user" placeholder="Correo electr&oacute;nico" />
-                <input type="text" id="pass" className="fadeIn third" onChange={this.handleChange} name="pass" placeholder="Contrase&ntilde;a" />
+                <input type="text" id="user" className="fadeIn second" onChange={this.handleChange} name="user" placeholder="Usuario" />
+                <input type="password" id="pass" className="fadeIn third" onChange={this.handleChange} name="pass" placeholder="Contrase&ntilde;a" />
                 <input type="button" onClick={()=>this.loginGet()} className="fadeIn fourth" value="Iniciar sesi&oacute;n" />
                 <br />
                 <a className="loginMessage">{this.state.ModalRequest.message}</a>

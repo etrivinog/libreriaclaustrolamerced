@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import CrudLibros from './components/CrudLibros';
 import CrudStudents from './components/StudentsMgr/CrudStudents';
+import BookCopys from './components/ejemplares/CrudEjemplares';
 import CrudLends from './components/lends/CrudLends';
 import VistaLisbrosEstudiante from './components/VistaLisbrosEstudiante';
 import Home from './components/Home';
@@ -89,10 +89,15 @@ class App extends Component {
         <Switch>
 
           /******************** Portal del admin ********************/
+          
+          <Route path="/ManageBooks/Copys/:bookId"
+                component={BookCopys}>
+          </Route>
+
           <Route path="/ManageBooks">
             <CrudLibros getSession={this.getSession}/>
           </Route>
-
+          
           <Route path="/ManageStudents">
             <CrudStudents getSession={this.getSession}/>
           </Route>
