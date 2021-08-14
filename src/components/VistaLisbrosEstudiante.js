@@ -4,6 +4,8 @@ import axios from "axios";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import {Link} from "react-router-dom";
 import ListaLibrosEstudiante from './ListaLibrosEstudiante';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import  {urlBase, urlAPIversion} from "../constants/urls"
 
@@ -11,6 +13,7 @@ const urlLibros = urlAPIversion+"books/";
 const urlPrestamos = urlAPIversion+"lends/";
 
 const urlLibrosFindAll = urlBase+urlLibros+"findAll";
+const urlLibrosSearch  = urlBase+urlLibros+"search";
 const urlPrestamosSave    = urlBase+urlPrestamos+"save";
 const urlLibrosUpdate  = urlBase+urlLibros+"update";
 const urlLibrosDelete  = urlBase+urlLibros+"delete";
@@ -26,6 +29,9 @@ state={
   form:{
     idEjemplar: '',
     codEstudiante: ''
+  },
+  search:{
+    searchBook: ''
   }
 }
 
@@ -34,6 +40,21 @@ peticionGet=()=>{
   axios.get(urlLibrosFindAll).then(response=>{
     this.setState({data: response.data});
     this.setState({message: ''});
+  }).catch(error=>{
+    console.log(error.message);
+    this.setState({message: error.message});
+  })
+}
+
+searchGet=()=>{
+  
+  this.setState({message: 'Cargando libros...'});
+  
+  axios.get(urlLibrosSearch+'?name='+this.state.search.searchBook).then(response=>{
+    
+    this.setState({data: response.data});
+    this.setState({message: ''});
+
   }).catch(error=>{
     console.log(error.message);
     this.setState({message: error.message});
@@ -93,6 +114,16 @@ await this.setState({
 console.log(this.state.form);
 }
 
+handleChangeSearch=async e=>{
+  e.persist();
+  await this.setState({
+    search:{
+      ...this.state.search,
+      [e.target.name]: e.target.value
+    }
+  });
+}
+
   componentDidMount() {
     this.peticionGet();
   }
@@ -102,13 +133,20 @@ console.log(this.state.form);
     const {form}=this.state;
   return (
     <div className="App">
-    <br /><br /><br />
-  
+    <br />  
   <Link class="btn btn-danger" to="/">Salir</Link>
   &nbsp;
   <Link className="btn btn-primary" to="#" onClick={()=>{}}>Ver mis pr&eacute;stamos</Link>
   <br /><br />
-  
+    
+    <div className="row">
+      <div className="col"></div>
+      <div className="col">
+        <input className="form-control" type="text" name="searchBook" id="searchBook" placeholder="Buscar libro" onChange={this.handleChangeSearch}/>
+        <button className="btn btn-primary" onClick={()=>this.searchGet()}><FontAwesomeIcon icon={faSearch}/> Buscar</button>
+      </div>
+    </div>
+
     <ListaLibrosEstudiante
       state = {this.state}
       seleccionarEmpresa = {this.seleccionarEmpresa}

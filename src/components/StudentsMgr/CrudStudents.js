@@ -123,8 +123,7 @@ console.log(this.state.form);
     const {form}=this.state;
   return (
     <div className="App">
-    <br /><br /><br />
-  
+    <br />
   <Link class="btn btn-danger" to="/AdminHome">Volver</Link>
   &nbsp;
   <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Agregar Estudiante</button>

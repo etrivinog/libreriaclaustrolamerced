@@ -88,8 +88,7 @@ await this.setState({
     const {form}=this.state;
   return (
     <div className="App">
-    <br /><br /><br />
-  
+    <br />  
   <Link className="btn btn-danger" to="/">Volver</Link>
   <br /><br />
   

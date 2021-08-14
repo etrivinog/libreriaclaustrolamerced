@@ -20,6 +20,7 @@ import axios from "axios";
 import HomeAdmin from './components/HomeAdmin';
 import StudentLogin from './components/StudentLogin';
 import ModalRequest from './components/ModalRequest';
+import Navbar from './components/Navbar';
 
 import  {urlBase, urlAPIversion} from "./constants/urls";
 
@@ -79,7 +80,7 @@ class App extends Component {
     <div className="App">
 
       <Router>
-        
+        <Navbar />
         <ModalRequest isOpen={this.state.ModalRequest.isOpen}
                       message={this.state.ModalRequest.message} 
                       showButton={this.state.ModalRequest.showButton} />

@@ -132,8 +132,7 @@ console.log(this.state.form);
     const {form}=this.state;
   return (
     <div className="App">
-    <br /><br /><br />
-  
+    <br />
   <Link class="btn btn-danger" to="/AdminHome">Volver</Link>
   <br /><br />
   

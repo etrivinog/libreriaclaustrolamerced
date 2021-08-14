@@ -119,10 +119,8 @@ class App extends Component {
     
   return (
     <div className="App">
-    <br /><br />
-    <p><h3>Ejemplares del libro [{bookId}]</h3></p>
     <br />
-  
+    <p><h3>Ejemplares del libro [{bookId}]</h3></p>
   <Link class="btn btn-danger" to="/ManageBooks">Volver</Link>
   &nbsp;
   <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Agregar Ejemplar</button>

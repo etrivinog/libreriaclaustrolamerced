@@ -4,12 +4,15 @@ import axios from "axios";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import {Link, Redirect} from "react-router-dom";
 import ListaLibros from './ListaLibros';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import  {urlBase, urlAPIversion} from "../constants/urls"
 
 const urlLibros = urlAPIversion+"books/";
 
 const urlLibrosFindAll = urlBase+urlLibros+"findAll";
+const urlLibrosSearch  = urlBase+urlLibros+"search";
 const urlLibrosSave    = urlBase+urlLibros+"save";
 const urlLibrosUpdate  = urlBase+urlLibros+"update";
 const urlLibrosDelete  = urlBase+urlLibros+"delete";
@@ -31,6 +34,9 @@ state={
     tipoRegistro: 1,
     numRegistro: '',
     tipoDivulgacion: 1
+  },
+  search:{
+    searchBook: ''
   }
 }
 
@@ -39,6 +45,21 @@ peticionGet=()=>{
   this.setState({message: 'Cargando libros...'});
   
   axios.get(urlLibrosFindAll).then(response=>{
+    
+    this.setState({data: response.data});
+    this.setState({message: ''});
+
+  }).catch(error=>{
+    console.log(error.message);
+    this.setState({message: error.message});
+  })
+}
+
+searchGet=()=>{
+  
+  this.setState({message: 'Cargando libros...'});
+  
+  axios.get(urlLibrosSearch+'?name='+this.state.search.searchBook).then(response=>{
     
     this.setState({data: response.data});
     this.setState({message: ''});
@@ -103,14 +124,23 @@ seleccionarEmpresa=(libro)=>{
 }
 
 handleChange=async e=>{
-e.persist();
-await this.setState({
-  form:{
-    ...this.state.form,
-    [e.target.name]: e.target.value
-  }
-});
-console.log(this.state.form);
+  e.persist();
+  await this.setState({
+    form:{
+      ...this.state.form,
+      [e.target.name]: e.target.value
+    }
+  });
+}
+
+handleChangeSearch=async e=>{
+  e.persist();
+  await this.setState({
+    search:{
+      ...this.state.search,
+      [e.target.name]: e.target.value
+    }
+  });
 }
 
   componentDidMount() {
@@ -122,13 +152,20 @@ console.log(this.state.form);
 
     return (
       <div className="App">
-      <br /><br /><br />
-    
+      <br />
       <Link className="btn btn-danger" to="/AdminHome">Volver</Link>
       &nbsp;
       <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Agregar Libro</button>
       <br /><br />
-      
+        
+        <div className="row">
+          <div className="col"></div>
+          <div className="col">
+            <input className="form-control" type="text" name="searchBook" id="searchBook" placeholder="Buscar libro" onChange={this.handleChangeSearch}/>
+            <button className="btn btn-primary" onClick={()=>this.searchGet()}><FontAwesomeIcon icon={faSearch}/> Buscar</button>
+          </div>
+        </div>
+
         <ListaLibros
           state = {this.state}
           seleccionarEmpresa = {this.seleccionarEmpresa}
