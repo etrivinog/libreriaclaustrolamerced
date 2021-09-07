@@ -26,7 +26,11 @@ const Home = ({getSession, setSession}) => {
                 <div className="col">
                     <Link to="ManageBooks"><button className="btn btn-primary option">Gestionar libros</button></Link>
                 </div>
-
+                
+                <div className="col">
+                    <Link to="ManageTesis"><button className="btn btn-primary option">Gestionar tesis</button></Link>
+                </div>
+                
                 <div className="col"></div>
                 
             </div>
@@ -47,10 +51,12 @@ const Home = ({getSession, setSession}) => {
 
                 <div className="col"></div>
                 
+                <div className="col"></div>
+                
             </div>
             
             <div className="row botton"></div>
-
+            
         </div>
     )
 }

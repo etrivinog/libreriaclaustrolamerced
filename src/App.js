@@ -8,6 +8,7 @@ import {
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import CrudLibros from './components/CrudLibros';
+import CrudTesis from './components/tesis/CrudTesis';
 import CrudStudents from './components/StudentsMgr/CrudStudents';
 import BookCopys from './components/ejemplares/CrudEjemplares';
 import CrudLends from './components/lends/CrudLends';
@@ -97,6 +98,10 @@ class App extends Component {
 
           <Route path="/ManageBooks">
             <CrudLibros getSession={this.getSession}/>
+          </Route>
+          
+          <Route path="/ManageTesis">
+            <CrudTesis getSession={this.getSession}/>
           </Route>
           
           <Route path="/ManageStudents">
