@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../App.css';
 import axios from "axios";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import ListaLibrosEstudiante from './ListaLibrosEstudiante';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -11,12 +11,14 @@ import  {urlBase, urlAPIversion} from "../constants/urls"
 
 const urlLibros = urlAPIversion+"books/";
 const urlPrestamos = urlAPIversion+"lends/";
+const urlStudents = urlAPIversion+"students/";
 
 const urlLibrosFindAll = urlBase+urlLibros+"findAll";
 const urlLibrosSearch  = urlBase+urlLibros+"search";
 const urlPrestamosSave    = urlBase+urlPrestamos+"save";
 const urlLibrosUpdate  = urlBase+urlLibros+"update";
 const urlLibrosDelete  = urlBase+urlLibros+"delete";
+const urlStudentsExists = urlBase+urlStudents+"studentExists";
 
 const parametroLibroId = "?libroId=";
 
@@ -25,7 +27,10 @@ state={
   data:[],
   modalInsertar: false,
   modalEliminar: false,
+  modalCodigo: false,
+  redirect: false,
   message: '',
+  studentCode: '',
   form:{
     idEjemplar: '',
     codEstudiante: ''
@@ -98,6 +103,10 @@ setModalEliminar = (value) => {
   this.setState({modalEliminar: value});
 }
 
+setModalCodigo = (value) => {
+  this.setState({modalCodigo: value});
+}
+
 seleccionarEmpresa=(libro)=>{
   this.setState({
     message: '',
@@ -118,6 +127,14 @@ handleChange=async e=>{
   });
 }
 
+handleCodeChange=async e=>{
+  e.persist();
+  await this.setState({
+      ...this.state,
+      [e.target.name]: e.target.value
+  });
+}
+
 handleChangeSearch=async e=>{
   e.persist();
   await this.setState({
@@ -128,19 +145,51 @@ handleChangeSearch=async e=>{
   });
 }
 
+validateStudentCode = ()=>{
+
+  axios.get(urlStudentsExists+'?code='+this.state.studentCode).then(response=>{
+    if (response.data.exists == 0) {
+      this.setState({message: 'No existe un estudiante con el código ingresado.'})
+    }else{
+      this.setState({redirect: true}) 
+    }
+  }).catch(error=>{
+    this.setState({message: error.response.data.message});
+  })
+}
+
+redirectToLends = ()=>{
+  this.setState({redirect: false});
+  return <Redirect to={'/Students/Lends/'+this.state.studentCode}/>;
+}
+
+validateLoadLends = ()=>{
+  if (this.state.studentCode) {
+    var exists = this.validateStudentCode();
+  }else {
+    this.setState({message: 'Ingrese el código del estudiante.'})
+  }
+}
+
   componentDidMount() {
     this.peticionGet();
   }
   
 
   render(){
-    const {form}=this.state;
+    const {form, redirect}=this.state;
+    
+    // Redirecciona a la vista de los préstamos de un estudiante
+    if (redirect) {
+      return this.redirectToLends();
+    }
+
   return (
     <div className="App">
     <br />  
   <Link class="btn btn-danger" to="/StudentPortal">Volver</Link>
   &nbsp;
-  <Link className="btn btn-primary" to="#" onClick={()=>{}}>Ver mis pr&eacute;stamos</Link>
+  <button className="btn btn-primary" onClick={()=>{this.setModalCodigo(true)}}>Ver mis pr&eacute;stamos</button>
   <br /><br />
     
     <div className="row">
@@ -159,39 +208,60 @@ handleChangeSearch=async e=>{
       message = {this.state.message} />
 
     <Modal isOpen={this.state.modalInsertar}>
-                <ModalHeader style={{display: 'block'}}>
-                  <span style={{float: 'right'}} onClick={()=>this.modalInsertar()}>x</span>
-                </ModalHeader>
-                <ModalBody>
-                <div className="form-group">
-                    <input className="form-control" type="hidden" name="idEstudiante" id="idEstudiante" readOnly onChange={this.handleChange} value={form?form.idEstudiante: ''}/>
-                    
-                    <label htmlFor="codEstudiante">C&oacute;digo de estudiante</label>
-                    <input className="form-control" type="text" name="codEstudiante" id="codEstudiante" onChange={this.handleChange} value={form?form.cod: ''}/>
-                    <br />
-                    {this.state.message}
-                  </div>
-                </ModalBody>
+      <ModalHeader style={{display: 'block'}}>
+        <span style={{float: 'right'}} onClick={()=>this.modalInsertar()}>x</span>
+      </ModalHeader>
+      <ModalBody>
+      <div className="form-group">
+          <input className="form-control" type="hidden" name="idEstudiante" id="idEstudiante" readOnly onChange={this.handleChange} value={form?form.idEstudiante: ''}/>
+          
+          <label htmlFor="codEstudiante">C&oacute;digo de estudiante</label>
+          <input className="form-control" type="text" name="codEstudiante" id="codEstudiante" onChange={this.handleChange} value={form?form.cod: ''}/>
+          <br />
+          {this.state.message}
+        </div>
+      </ModalBody>
 
-                <ModalFooter>
-                  <button className="btn btn-primary" onClick={()=>this.peticionPost()}>
-                    Solicitar pr&eacute;stamo
-                  </button>
-  
-                  <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
-                </ModalFooter>
-          </Modal>
+      <ModalFooter>
+        <button className="btn btn-primary" onClick={()=>this.peticionPost()}>
+          Solicitar pr&eacute;stamo
+        </button>
 
+        <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
+      </ModalFooter>
+    </Modal>
+    
+    <Modal isOpen={this.state.modalCodigo}>
+      <ModalHeader style={{display: 'block'}}>
+        <span style={{float: 'right'}} onClick={()=>this.setModalCodigo(false)}>x</span>
+      </ModalHeader>
+      <ModalBody>
+      <div className="form-group">
+          <label htmlFor="studentCode">C&oacute;digo de estudiante</label>
+          <input className="form-control" type="text" name="studentCode" id="studentCode" onChange={this.handleCodeChange} value={this.state.studentCode}/>
+          <br />
+          {this.state.message}
+        </div>
+      </ModalBody>
 
-          <Modal isOpen={this.state.modalEliminar}>
-            <ModalBody>
-               Estás seguro que deseas eliminar el libro "{form && form.nombre}"
-            </ModalBody>
-            <ModalFooter>
-              <button className="btn btn-danger" onClick={()=>this.peticionDelete()}>Sí</button>
-              <button className="btn btn-secundary" onClick={()=>this.setState({modalEliminar: false})}>No</button>
-            </ModalFooter>
-          </Modal>
+      <ModalFooter>
+        <button className="btn btn-primary" onClick={()=>this.validateLoadLends()} >
+          Ver pr&eacute;stamos
+        </button>
+
+        <button className="btn btn-danger" onClick={()=>this.setModalCodigo(false)}>Cancelar</button>
+      </ModalFooter>
+    </Modal>
+
+    <Modal isOpen={this.state.modalEliminar}>
+      <ModalBody>
+          Estás seguro que deseas eliminar el libro "{form && form.nombre}"
+      </ModalBody>
+      <ModalFooter>
+        <button className="btn btn-danger" onClick={()=>this.peticionDelete()}>Sí</button>
+        <button className="btn btn-secundary" onClick={()=>this.setState({modalEliminar: false})}>No</button>
+      </ModalFooter>
+    </Modal>
   </div>
 
 

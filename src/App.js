@@ -15,6 +15,7 @@ import CrudLends from './components/lends/CrudLends';
 import HomeStudent from './components/Students/HomeStudent';
 import VistaLisbrosEstudiante from './components/VistaLisbrosEstudiante';
 import VistaTesis from './components/Students/Tesis/VistaTesis';
+import VistaLendsStudents from './components/Students/Lends/VistaLendsStudents';
 import Home from './components/Home';
 import ValidateAdminLogin from './components/ValidateAdminLogin';
 
@@ -133,6 +134,10 @@ class App extends Component {
 
           <Route path="/Students/Tesis">
             <VistaTesis/>
+          </Route>
+                    
+          <Route path="/Students/lends/:studentCode"
+                component={VistaLendsStudents}>
           </Route>
 
           <Route path="/">
