@@ -23,6 +23,7 @@ const LendsList = ({state, seleccionarEmpresa, modalInsertar, setModalEliminar, 
               <th>Desde</th>
               <th>Hasta</th>
               <th>Libro</th>
+              <th>Ejemplar</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -34,7 +35,8 @@ const LendsList = ({state, seleccionarEmpresa, modalInsertar, setModalEliminar, 
               <td>{prestamo.codEstudiante}</td>
               <td>{prestamo.fechaInicio}</td>
               <td>{prestamo.fechaFin}</td>
-              <td>{prestamo.idEjemplar}</td>
+              <td>{prestamo.libroTittle}</td>
+              <td>{prestamo.ejemplarDesc}</td>
               <td>{prestamo.estado=="E"?"En espera":
                   prestamo.estado=="A"?"Aprobado":
                   prestamo.estado=="R"?"Rechazado":

@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from "axios";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import {Col, Modal, ModalBody, ModalFooter, ModalHeader,FormGroup, Label, Input } from 'reactstrap';
 import {Link} from "react-router-dom";
 import LendsList from './LendsList';
 
 import  {urlBase, urlAPIversion} from "../../constants/urls"
 
 const urlLends = urlAPIversion+"lends/";
+const urlEjemplar = urlAPIversion+"ejemplar/";
+
+const urlGetCopyDescByBook = urlBase+urlEjemplar+"getCopyDescByBook";
 
 const urlFindAll = urlBase+urlLends+"findAll";
 const urlSave    = urlBase+urlLends+"save";
@@ -16,21 +19,28 @@ const urlReject  = urlBase+urlLends+"reject";
 const urlEnd  = urlBase+urlLends+"finalize";
 
 const parameterId = "?idprestamos=";
+const ejemplarParam = "&idEjemplar=";
+const bookId = "?book=";
 
 class App extends Component {
 state={
   data:[],
+  copyDescs:[],
   modalInsertar: false,
   modalEliminar: false,
   modalFinalizar: false,
   message: '',
+  activeBtn: true,
   form:{
-    idprestamos: '',
-    fechaInicio: '',
-    fechaFin: '',
-    idEjemplar: '',
-    codEstudiante: '',
-    estado: ''
+      idprestamos: '',
+      fechaInicio: '',
+      fechaFin: '',
+      ejemplarDesc: '',
+      idEjemplar: '',
+      libroTittle: '',
+      idLibro: '',
+      codEstudiante: '',
+      estado: ''
   }
 }
 
@@ -39,7 +49,7 @@ peticionGet=()=>{
   this.setState({message: 'Cargando préstamos...'});
 
   axios.get(urlFindAll).then(response=>{
-
+    
     this.setState({data: response.data});
     this.setState({message: ''});
     
@@ -49,27 +59,50 @@ peticionGet=()=>{
   })
 }
 
+getCopyDescByBook=(idLibro)=>{
+
+  this.setState({message: 'Consultando ejemplares...', activeBtn: true});
+  console.log(JSON.stringify(this.state));
+  axios.get(urlGetCopyDescByBook+bookId+idLibro).then(response=>{
+
+    if (response.data.length === 0) {
+      this.setState({message: 'No hay ejemplares disponibles para este libro.', activeBtn: false});
+    }else{
+      this.setState({copyDescs: response.data});
+      this.setState({message: ''});
+    }
+
+  }).catch(error=>{
+    console.log(error.message);
+    this.setState({message: error.message});
+  })
+}
+
 peticionPost=async()=>{
-  console.log(JSON.stringify(this.state.form))
 
   if(this.state.form.identificacion == null || this.state.form.idtipoidentificacion == null
     || this.state.form.codigo_estudiantil == null ){
     return;
   }
   
- await axios.post(urlSave,this.state.form).then(response=>{
-    this.modalInsertar();
+  axios.post(urlSave,this.state.form).then(response=>{
     this.peticionGet();
+    this.modalInsertar();
   }).catch(error=>{
-    console.log(error.message);
+    console.log(error.response.message);
   })
 }
 
 approveLend=()=>{
-  axios.put(urlApprove+'?idprestamos='+this.state.form.idprestamos).then(response=>{
-    this.modalInsertar();
-    this.peticionGet();
-  })
+  if (this.state.activeBtn) {
+    axios.put(urlApprove+'?idprestamos='+this.state.form.idprestamos+ejemplarParam+this.state.form.idEjemplar).then(response=>{
+      this.setState({copyDescs: []});
+      this.peticionGet();
+      this.modalInsertar();
+    }).catch(error=>{this.setState({message: error.response.data.message})}) 
+  }else{
+    this.setState({message: 'No es posible aprobar el préstamo.'})
+  }
 }
 
 rejectLend=()=>{
@@ -99,17 +132,26 @@ setModalFinalizar = (value) => {
 }
 
 seleccionarEmpresa=(prestamo)=>{
+
+  console.log(JSON.stringify(prestamo))
   this.setState({
     tipoModal: 'actualizar',
     form:{
       idprestamos: prestamo.idprestamos,
       fechaInicio: prestamo.fechaInicio,
       fechaFin: prestamo.fechaFin,
+      ejemplarDesc: prestamo.ejemplarDesc,
       idEjemplar: prestamo.idEjemplar,
+      libroTittle: prestamo.libroTittle,
+      idLibro: prestamo.idLibro,
       codEstudiante: prestamo.codEstudiante,
       estado: prestamo.estado
     }
   })
+    
+  // Obtiene las descripciones de los ejemplares del libro
+  this.getCopyDescByBook(prestamo.idLibro);
+
 }
 
 handleChange=async e=>{
@@ -149,22 +191,39 @@ console.log(this.state.form);
                   <span style={{float: 'right'}} onClick={()=>this.modalInsertar()}>x</span>
                 </ModalHeader>
                 <ModalBody>
-                ¿Está seguro que desea aprobar la solicitud de pr&eacute;stamo?
                   <div className="form-group">
                     <input className="form-control" type="hidden" name="idPrestamos" id="idPrestamos" readOnly onChange={this.handleChange} value={form?form.idPrestamos: ''}/>
-                    
+                    <FormGroup>
+                      <Col sm={10}>Seleccione el ejemplar a prestar:
+                      <br />
+                      {
+                        this.state.copyDescs.map(copy =>{
+                          return (
+                          <div className="form-check">
+                            <input className="form-check-input" type="radio" name="idEjemplar" id={'ejemplar'+copy.idejemplar}  onChange={this.handleChange} value={copy.idejemplar} checked={form&&form.idEjemplar==copy.idejemplar?true:false} required/>
+                            <label className="form-check-label" for={'ejemplar'+copy.idejemplar}>{copy.descripcion}</label>
+                          </div>
+                        )
+                        }
+                      )
+                      }
+                      </Col>
+                      {this.state.message}
+                    </FormGroup>
                     <input className="form-control" type="hidden" name="estado" id="estado" onChange={this.handleChange} value="A"/>
+
                   </div>
                 </ModalBody>
 
                 <ModalFooter>
-                  {this.state.tipoModal=='insertar'?
-                    <button className="btn btn-success" onClick={()=>this.peticionPost()}>
-                    Insertar
-                  </button>: <button className="btn btn-primary" onClick={()=>this.approveLend()}>
-                    Aprobar
-                  </button>
-  }
+                  {
+                    this.state.tipoModal=='insertar'?
+                      <button className="btn btn-success" onClick={()=>this.peticionPost()}>
+                      Insertar
+                    </button>: <button className="btn btn-primary" onClick={()=>this.approveLend()}>
+                      Aprobar
+                    </button>
+                  }
                     <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
                 </ModalFooter>
           </Modal>

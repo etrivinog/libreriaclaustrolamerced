@@ -41,7 +41,6 @@ peticionGet=()=>{
     this.setState({data: response.data});
     this.setState({message: ''});
   }).catch(error=>{
-    console.log(error.message);
     this.setState({message: error.message});
   })
 }
@@ -56,19 +55,24 @@ searchGet=()=>{
     this.setState({message: ''});
 
   }).catch(error=>{
-    console.log(error.message);
     this.setState({message: error.message});
   })
 }
 
 peticionPost=async()=>{
-  console.log(JSON.stringify(this.state.form))
+
+  if(this.state.form.codEstudiante == null){
+    this.setState({message: 'Ingrese el código del estudiante'});
+    return;
+  }
   
- await axios.post(urlPrestamosSave,this.state.form).then(response=>{
+  axios.post(urlPrestamosSave,this.state.form).then(response=>{
     this.modalInsertar();
     this.peticionGet();
   }).catch(error=>{
-    console.log(error.message);
+    if (error.response) {
+      this.setState({message: error.response.data.message}); 
+    }
   })
 }
 
@@ -96,22 +100,22 @@ setModalEliminar = (value) => {
 
 seleccionarEmpresa=(libro)=>{
   this.setState({
+    message: '',
     tipoModal: 'actualizar',
     form:{
-      idEjemplar: libro.libroId
+      idLibro: libro.libroId
     }
   })
 }
 
 handleChange=async e=>{
-e.persist();
-await this.setState({
-  form:{
-    ...this.state.form,
-    [e.target.name]: e.target.value
-  }
-});
-console.log(this.state.form);
+  e.persist();
+  await this.setState({
+    form:{
+      ...this.state.form,
+      [e.target.name]: e.target.value
+    }
+  });
 }
 
 handleChangeSearch=async e=>{
@@ -134,7 +138,7 @@ handleChangeSearch=async e=>{
   return (
     <div className="App">
     <br />  
-  <Link class="btn btn-danger" to="/">Salir</Link>
+  <Link class="btn btn-danger" to="/StudentPortal">Volver</Link>
   &nbsp;
   <Link className="btn btn-primary" to="#" onClick={()=>{}}>Ver mis pr&eacute;stamos</Link>
   <br /><br />
@@ -165,6 +169,7 @@ handleChangeSearch=async e=>{
                     <label htmlFor="codEstudiante">C&oacute;digo de estudiante</label>
                     <input className="form-control" type="text" name="codEstudiante" id="codEstudiante" onChange={this.handleChange} value={form?form.cod: ''}/>
                     <br />
+                    {this.state.message}
                   </div>
                 </ModalBody>
 
@@ -173,7 +178,7 @@ handleChangeSearch=async e=>{
                     Solicitar pr&eacute;stamo
                   </button>
   
-                    <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
+                  <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
                 </ModalFooter>
           </Modal>
 

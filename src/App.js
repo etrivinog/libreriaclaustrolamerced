@@ -12,7 +12,9 @@ import CrudTesis from './components/tesis/CrudTesis';
 import CrudStudents from './components/StudentsMgr/CrudStudents';
 import BookCopys from './components/ejemplares/CrudEjemplares';
 import CrudLends from './components/lends/CrudLends';
+import HomeStudent from './components/Students/HomeStudent';
 import VistaLisbrosEstudiante from './components/VistaLisbrosEstudiante';
+import VistaTesis from './components/Students/Tesis/VistaTesis';
 import Home from './components/Home';
 import ValidateAdminLogin from './components/ValidateAdminLogin';
 
@@ -122,7 +124,15 @@ class App extends Component {
           </Route>
 
           <Route path="/StudentPortal">
+            <HomeStudent/>
+          </Route>
+
+          <Route path="/Students/Books">
             <VistaLisbrosEstudiante/>
+          </Route>
+
+          <Route path="/Students/Tesis">
+            <VistaTesis/>
           </Route>
 
           <Route path="/">

@@ -127,7 +127,7 @@ class App extends Component {
     <br />
   <Link class="btn btn-danger" to="/AdminHome">Volver</Link>
   &nbsp;
-  <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Agregar Ejemplar</button>
+  <button className="btn btn-primary" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>Agregar Tesis</button>
   <br /><br />
   
     <TesisList
