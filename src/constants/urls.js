@@ -1,7 +1,7 @@
 
 //URL Remote server
-const urlBase = "https://hemerotecaudc.herokuapp.com/";
-//const urlBase = "http://localhost:8080/";
+//const urlBase = "https://hemerotecaudc.herokuapp.com/";
+const urlBase = "http://localhost:8080/";
 
 //API version
 const urlAPIversion = "api/v1/";

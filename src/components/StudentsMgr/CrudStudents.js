@@ -21,14 +21,21 @@ state={
   data:[],
   modalInsertar: false,
   modalEliminar: false,
+  validEmail: false,
+  validName: false,
+  validLastName: false,
   message: '',
+  modalMessage: '',
+  emailMessage: '',
+  nameMessage: '',
+  lastNameMessage: '',
   form:{
     idEstudiante: '',
     nombres: '',
     apellidos: '',
     email: '',
     telefono: '',
-    codigo_estudiantil: '',
+    codigoestudiantil: '',
     identificacion: '',
     idtipoidentificacion: ''
   }
@@ -44,32 +51,66 @@ peticionGet=()=>{
     this.setState({message: ''});
 
   }).catch(error=>{
-    console.log(error.message);
     this.setState({message: error.message});
   })
 }
 
-peticionPost=async()=>{
-  console.log(JSON.stringify(this.state.form))
-
-  if(this.state.form.identificacion == null || this.state.form.idtipoidentificacion == null
-    || this.state.form.codigo_estudiantil == null ){
-    return;
-  }
+validateForm = ()=>{
   
- await axios.post(urlSave,this.state.form).then(response=>{
-    this.modalInsertar();
-    this.peticionGet();
-  }).catch(error=>{
-    console.log(error.message);
-  })
+  this.validateEmail(this.state.form?this.state.form.email:'-');
+  this.validateName(this.state.form?this.state.form.nombres:'-');
+  this.validateLastName(this.state.form?this.state.form.apellidos:'-');
+
+  console.log(this.state);
+
+  if( this.state.validEmail == false
+      || this.state.validName == false
+      || this.state.validLastName == false
+      || this.state.form.nombres == null
+      || this.state.form.nombres == ''
+      || this.state.form.apellidos == null
+      || this.state.form.apellidos == ''
+      || this.state.form.email == null
+      || this.state.form.email == ''
+      || this.state.form.telefono == null
+      || this.state.form.telefono == ''
+      || this.state.form.codigoestudiantil == null
+      || this.state.form.codigoestudiantil == ''
+      || this.state.form.identificacion == null
+      || this.state.form.identificacion == ''
+      || this.state.form.idtipoidentificacion == null
+      || this.state.form.idtipoidentificacion == '' ){
+
+    this.setState({modalMessage: 'Verifique que todos los campos se encuentren diligenciados correctamente.'});
+    return false;
+
+  }
+
+  return true;
+  
+}
+
+peticionPost=async()=>{
+
+  if(this.validateForm()){
+
+    await axios.post(urlSave,this.state.form).then(response=>{
+      this.modalInsertar();
+      this.peticionGet();
+      this.setState({emailMessage: '', modalMessage: '', nameMessage:'', emailMessage:'', validEmail: false, 
+                            validName: false, validLastName: false});
+    })
+
+  }
 }
 
 peticionPut=()=>{
-  axios.put(urlUpdate, this.state.form).then(response=>{
-    this.modalInsertar();
-    this.peticionGet();
-  })
+  if (this.validateForm()) {
+    axios.put(urlUpdate, this.state.form).then(response=>{
+      this.modalInsertar();
+      this.peticionGet();
+    })
+  }
 }
 
 peticionDelete=()=>{
@@ -80,7 +121,7 @@ peticionDelete=()=>{
 }
 
 modalInsertar=()=>{
-  this.setState({modalInsertar: !this.state.modalInsertar});
+  this.setState({modalInsertar: !this.state.modalInsertar, emailMessage: '', modalMessage: ''});
 }
 
 setModalEliminar = (value) => {
@@ -96,22 +137,70 @@ seleccionarEmpresa=(estudiante)=>{
       apellidos: estudiante.apellidos,
       email: estudiante.email,
       telefono: estudiante.telefono,
-      codigo_estudiantil: estudiante.codigo_estudiantil,
+      codigoestudiantil: estudiante.codigoestudiantil,
       identificacion: estudiante.identificacion,
       idtipoidentificacion: estudiante.idtipoidentificacion
     }
   })
 }
 
-handleChange=async e=>{
-e.persist();
-await this.setState({
-  form:{
-    ...this.state.form,
-    [e.target.name]: e.target.value
+validateEmail = (email) => {
+
+  if(email != null && email != ''){
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    
+    if (re.test(email)){
+      this.setState({validEmail: true, emailMessage: ''});
+    }else{
+      this.setState({validEmail: false, emailMessage: 'El email tiene un formato incorrecto.'});
+    }
   }
-});
-console.log(this.state.form);
+}
+
+validateName = (name) => {
+
+  if(name != null && name != ''){
+    const re = /^(([a-zA-Z]{2,}))$/;
+    
+    if (re.test(name)){
+      this.setState({validName: true, nameMessage: ''});
+    }else{
+      this.setState({validName: false, nameMessage: 'El nombre tiene un formato incorrecto.'});
+    }
+  }
+}
+
+validateLastName = (lastName) => {
+
+  if(lastName != null && lastName != ''){
+    const re = /^(([a-zA-Z]{2,}))$/;
+    
+    if (re.test(lastName)){
+      this.setState({validLastName: true, lastNameMessage: ''});
+    }else{
+      this.setState({validLastName: false, lastNameMessage: 'El apellido tiene un formato incorrecto.'});
+    }
+  }
+}
+
+handleChange=async e=>{
+  
+  if(e.target.id == 'email'){
+    this.validateEmail(e.target.value);
+  }else if(e.target.id == 'nombres'){
+    this.validateName(e.target.value);
+  }else if(e.target.id == 'apellidos'){
+    this.validateLastName(e.target.value);
+  }
+
+  e.persist();
+  await this.setState({
+    form:{
+      ...this.state.form,
+      [e.target.name]: e.target.value
+    }
+  });
+
 }
 
   componentDidMount() {
@@ -147,17 +236,23 @@ console.log(this.state.form);
                     <label htmlFor="nombres">Nombres</label>
                     <input className="form-control" type="text" name="nombres" id="nombres" onChange={this.handleChange} value={form?form.nombres: ''}/>
                     <br />
+                    <div className="valMessage">{this.state.nameMessage}</div>
+                    <br />
                     <label htmlFor="apellidos">Apellidos</label>
                     <input className="form-control" type="text" name="apellidos" id="apellidos" onChange={this.handleChange} value={form?form.apellidos: ''}/>
+                    <br />
+                    <div className="valMessage">{this.state.lastNameMessage}</div>
                     <br />
                     <label htmlFor="email">Correo electr&oacute;nico</label>
                     <input className="form-control" type="text" name="email" id="email" onChange={this.handleChange} value={form?form.email: ''}/>
                     <br />
+                    <div className="valMessage">{this.state.emailMessage}</div>
+                    <br />
                     <label htmlFor="telefono">Telefono</label>
                     <input className="form-control" type="text" name="telefono" id="telefono" onChange={this.handleChange} value={form?form.telefono: ''}/>
                     <br />
-                    <label htmlFor="codigo_estudiantil">C&oacute;digo de estudiante</label>
-                    <input className="form-control" type="text" name="codigo_estudiantil" id="codigo_estudiantil" onChange={this.handleChange} value={form?form.codigo_estudiantil: ''}/>
+                    <label htmlFor="codigoestudiantil">C&oacute;digo de estudiante</label>
+                    <input className="form-control" type="text" name="codigoestudiantil" id="codigoestudiantil" onChange={this.handleChange} value={form?form.codigoestudiantil: ''}/>
                     <br />
                     <label htmlFor="identificacion">Identificaci&oacute;n</label>
                     <input className="form-control" type="text" name="identificacion" id="identificacion" onChange={this.handleChange} value={form?form.identificacion: ''}/>
@@ -169,21 +264,25 @@ console.log(this.state.form);
                       <input class="form-check-input" type="radio" name="idtipoidentificacion" id="idtipoidentificacion1"  onChange={this.handleChange} value="1" checked={form&&form.idtipoidentificacion==1?true:false} required/>
                       <label class="form-check-label" for="idtipoidentificacion1">C&eacute;dula de ciudadanía</label>
                     </div>
+                    <br />
                     <div class="form-check form-check-inline">
                       <input class="form-check-input" type="radio" name="idtipoidentificacion" id="idtipoidentificacion2"  onChange={this.handleChange} value="2" checked={form&&form.idtipoidentificacion==2?true:false}/>
                       <label class="form-check-label" for="idtipoidentificacion2">Tarjeta de identidad</label>
                     </div>
+                    <br />
                     <div class="form-check form-check-inline">
                       <input class="form-check-input" type="radio" name="idtipoidentificacion" id="idtipoidentificacion3"  onChange={this.handleChange} value="3" checked={form&&form.idtipoidentificacion==3?true:false}/>
                       <label class="form-check-label" for="idtipoidentificacion3">Pasaporte</label>
                     </div>
+                    <br /><br />
+                    <div className="valMessage">{this.state.modalMessage}</div>
                   </div>
                 </ModalBody>
 
                 <ModalFooter>
                   {this.state.tipoModal=='insertar'?
                     <button className="btn btn-success" onClick={()=>this.peticionPost()}>
-                    Insertar
+                    Guardar
                   </button>: <button className="btn btn-primary" onClick={()=>this.peticionPut()}>
                     Actualizar
                   </button>

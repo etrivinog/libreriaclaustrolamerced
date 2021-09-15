@@ -101,11 +101,9 @@ await this.setState({
                 <input type="password" id="pass" className="fadeIn third" onChange={this.handleChange} name="pass" placeholder="Contrase&ntilde;a" />
                 <input type="button" onClick={()=>this.loginGet()} className="fadeIn fourth" value="Iniciar sesi&oacute;n" />
                 <br />
-                <a className="loginMessage">{this.state.ModalRequest.message}</a>
+                <div className="loginMessage">{this.state.ModalRequest.message}</div>
+                <br />
                 </form>
-                <div id="formFooter">
-                <a className="underlineHover" href="#">Forgot Password?</a>
-                </div>
 
             </div>
 

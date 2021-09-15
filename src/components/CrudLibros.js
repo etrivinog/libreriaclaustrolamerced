@@ -25,6 +25,7 @@ state={
   modalInsertar: false,
   modalEliminar: false,
   message: '',
+  modalMessage: '',
   form:{
     libroId: '',
     nombre: '',
@@ -70,26 +71,48 @@ searchGet=()=>{
   })
 }
 
+validateForm = () => {
+  
+  if( this.state.form == null
+      ||this.state.form.tipoRegistro == null
+      || this.state.form.tipoRegistro == ''
+      || this.state.form.tipoDivulgacion == null
+      || this.state.form.tipoDivulgacion == ''
+      || this.state.form.nombre == null
+      || this.state.form.nombre == ''
+      || this.state.form.referencia == null
+      || this.state.form.referencia == ''
+      || this.state.form.numRegistro == null
+      || this.state.form.numRegistro == ''
+      || this.state.form.anio == null
+      || this.state.form.anio == '' ){
+        
+      this.setState({modalMessage: 'Verifique que todos los campos estén diligenciados correctamente.'});
+      return false;
+  }
+
+  return true;
+
+}
 peticionPost=async()=>{
   console.log(JSON.stringify(this.state.form))
 
-  if(this.state.form.tipoRegistro == null || this.state.form.tipoDivulgacion == null){
-    return;
+  if(this.validateForm()){
+      await axios.post(urlLibrosSave,this.state.form).then(response=>{
+      this.modalInsertar();
+      this.peticionGet();
+    })
   }
-  
- await axios.post(urlLibrosSave,this.state.form).then(response=>{
-    this.modalInsertar();
-    this.peticionGet();
-  }).catch(error=>{
-    console.log(error.message);
-  })
+
 }
 
 peticionPut=()=>{
-  axios.put(urlLibrosUpdate, this.state.form).then(response=>{
-    this.modalInsertar();
-    this.peticionGet();
-  })
+  if(this.validateForm()){
+    axios.put(urlLibrosUpdate, this.state.form).then(response=>{
+      this.modalInsertar();
+      this.peticionGet();
+    })
+  }
 }
 
 peticionDelete=()=>{
@@ -100,7 +123,7 @@ peticionDelete=()=>{
 }
 
 modalInsertar=()=>{
-  this.setState({modalInsertar: !this.state.modalInsertar});
+  this.setState({modalInsertar: !this.state.modalInsertar, modalMessage: ''});
 }
 
 setModalEliminar = (value) => {
@@ -110,6 +133,7 @@ setModalEliminar = (value) => {
 seleccionarEmpresa=(libro)=>{
   this.setState({
     tipoModal: 'actualizar',
+    modalMessage: '',
     form:{
       libroId: libro.libroId,
       nombre: libro.nombre,
@@ -217,6 +241,9 @@ handleChangeSearch=async e=>{
                           <input className="form-check-input" type="radio" name="tipoDivulgacion" id="tipoDivulgacion2"  onChange={this.handleChange} value="2" checked={form&&form.tipoDivulgacion==2?true:false}/>
                           <label className="form-check-label" for="tipoDivulgacion2">CD</label>
                         </div>
+                        <br />
+                        <br />
+                        <div className="valMessage">{this.state.modalMessage}</div>
                       </div>
                     </ModalBody>
 

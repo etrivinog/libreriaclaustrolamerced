@@ -30,6 +30,7 @@ state={
   modalCodigo: false,
   redirect: false,
   message: '',
+  modalMessage: '',
   studentCode: '',
   form:{
     idEjemplar: '',
@@ -67,7 +68,7 @@ searchGet=()=>{
 peticionPost=async()=>{
 
   if(this.state.form.codEstudiante == null){
-    this.setState({message: 'Ingrese el código del estudiante'});
+    this.setState({modalMessage: 'Ingrese el código del estudiante'});
     return;
   }
   
@@ -76,7 +77,7 @@ peticionPost=async()=>{
     this.peticionGet();
   }).catch(error=>{
     if (error.response) {
-      this.setState({message: error.response.data.message}); 
+      this.setState({modalMessage: error.response.data.message}); 
     }
   })
 }
@@ -96,15 +97,15 @@ peticionDelete=()=>{
 }
 
 modalInsertar=()=>{
-  this.setState({modalInsertar: !this.state.modalInsertar});
+  this.setState({modalInsertar: !this.state.modalInsertar, modalMessage: ''});
 }
 
 setModalEliminar = (value) => {
-  this.setState({modalEliminar: value});
+  this.setState({modalEliminar: value, modalMessage: ''});
 }
 
 setModalCodigo = (value) => {
-  this.setState({modalCodigo: value});
+  this.setState({modalCodigo: value, modalMessage:''});
 }
 
 seleccionarEmpresa=(libro)=>{
@@ -149,12 +150,12 @@ validateStudentCode = ()=>{
 
   axios.get(urlStudentsExists+'?code='+this.state.studentCode).then(response=>{
     if (response.data.exists == 0) {
-      this.setState({message: 'No existe un estudiante con el código ingresado.'})
+      this.setState({modalMessage: 'No existe un estudiante con el código ingresado.'})
     }else{
       this.setState({redirect: true}) 
     }
   }).catch(error=>{
-    this.setState({message: error.response.data.message});
+    this.setState({modalMessage: error.response.data.message});
   })
 }
 
@@ -167,7 +168,7 @@ validateLoadLends = ()=>{
   if (this.state.studentCode) {
     var exists = this.validateStudentCode();
   }else {
-    this.setState({message: 'Ingrese el código del estudiante.'})
+    this.setState({modalMessage: 'Ingrese el código del estudiante.'})
   }
 }
 
@@ -218,7 +219,7 @@ validateLoadLends = ()=>{
           <label htmlFor="codEstudiante">C&oacute;digo de estudiante</label>
           <input className="form-control" type="text" name="codEstudiante" id="codEstudiante" onChange={this.handleChange} value={form?form.cod: ''}/>
           <br />
-          {this.state.message}
+          {this.state.modalMessage}
         </div>
       </ModalBody>
 
@@ -240,7 +241,7 @@ validateLoadLends = ()=>{
           <label htmlFor="studentCode">C&oacute;digo de estudiante</label>
           <input className="form-control" type="text" name="studentCode" id="studentCode" onChange={this.handleCodeChange} value={this.state.studentCode}/>
           <br />
-          {this.state.message}
+          {this.state.modalMessage}
         </div>
       </ModalBody>
 

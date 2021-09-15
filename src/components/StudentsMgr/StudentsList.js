@@ -27,7 +27,7 @@ const StudentsList = ({state, seleccionarEmpresa, modalInsertar, setModalElimina
               <td>{estudiante.apellidos}</td>
               <td>{estudiante.email}</td>
               <td>{estudiante.telefono}</td>
-              <td>{estudiante.codigo_estudiantil}</td>
+              <td>{estudiante.codigoestudiantil}</td>
               <td>{estudiante.identificacion}</td>
               <td>{estudiante.idtipoidentificacion==1?"Cédula de ciudadanía":
                   estudiante.idtipoidentificacion==2?"Tarjeta de identidad":

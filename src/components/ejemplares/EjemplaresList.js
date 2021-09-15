@@ -19,8 +19,8 @@ const StudentsList = ({state, seleccionarEjemplar, modalInsertar, setModalElimin
               return(
                 <tr>
                   <td>{ejemplar.descripcion}</td>
-                  <td>{ejemplar.idestado==1?"Disponible":
-                      ejemplar.idestado==2?"En préstamo":
+                  <td>{ejemplar.idestado===1?"Disponible":
+                      ejemplar.idestado===2?"En préstamo":
                       ""}
                   </td>
                   <td>
